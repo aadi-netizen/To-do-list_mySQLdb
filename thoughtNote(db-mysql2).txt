@@ -1,0 +1,115 @@
+♦ Project description:
+
+Project name: To-do-list,
+description : It is an to-do-list application where the frontend has been created using React and Backend
+has been created nodeJs-express server connected to a mySQL database. 
+
+The contains APIs for addition, retirval and deletion of tasks.
+
+--------------------------------------------------------------------------------------------------
+♦ Project sturcture: 
+The project is divided into two parts : 
+• Backend 
+  • server (node-express)
+  • database (mySQL)
+• Frontend (react)
+
+-----------------------------------------------------------------------------------------------------
+♦♦♦ Frontend 
+
+♦♦ In the previous project there were APIs for getting task and postind task and the task were stored in "node-persist"
+data storage. Since in this project "delete" functionality has to be added. 
+
+♦ My main concern was to keep "task_id" of the posted task
+unique moreover to keep the "task_id" of the task clicked to be deleted with the posted one in sync . 
+Hence Post API has been altered a bit where "previousValue" of the task_id state has been used.
+
+♦ For the posted tasks has been assigned as per index of the current task-item while rendering it for the first time.
+
+Bug alert !!!
+------------------------
+
+Although all the functionalities are working fine but while adding the "1st task" it not taking any "task_id" which 
+makes the 1st task invincible against the user cannot get rid of it using the existing logic.
+
+Leaving this bug as it is for future.
+
+
+• The frontend could be divided into 2 parts: 
+  • index.css: for the styling of the UI and 
+  • App.jsx: This contains the all the functionalities of the react Application. Such as 
+    • 1. return (for input) Form and list (for output)
+    • 2. API for fetching the data dynamicly
+    • 3. API for posting the task (data) dynamicly
+    • 4. Error handling for the async functionalities
+
+------------------------------------
+
+♦♦ API for fetching the data dynamicly
+   • Declaring a function "getData()" 
+   1. to fetch data(task) using fetch API,
+   2. convert the obtained data into a json object
+   3. setting the data as the state of the task array.
+   4. calling the function inside "useEffect()" as 'useEffect(() => getData(),[])' where the 
+   empty "[]" ensures that the it does not keep running.
+
+♦ rendering the fetched data from the server
+   • "Array.map()" is used to iterate through each task and return it in a list item
+
+♦♦ API for posting data(task):
+
+• state: to store input
+• anomymous fxn passed as the "onChange" event handler to set user input into the declared state
+♦ setting up post API for posting the data:
+  • setting Server: post-task API
+  • setting the configuration as 
+  {
+    method="post",
+    body = JSON.strigify({task-state}),
+    headers = {"content-type": "application/json"} 
+    // misspelling "header" as "Headers" made posting empty object in the req.body
+  }
+  • logging the response from the server in both the cases i.e success and errors
+
+  -------------------------------------------------------------------------------------------
+  ♦ Backend : It contains an express server, node-persist storage and Two RESTful API for listening 
+GET and POST requests.
+
+• "cors()" is included to allow cross-origin communication
+• "express.json()" method has been used to parse the "JSON" data obtained from the "req.body"
+• "mysql2" connection is configured and tasks are being stored in the mySQL storage.
+
+• POST API : It contains functionality to 
+1. access the data in the "req.body",
+2. setting the data into the persistant storage,
+3. handling errors obtained from the browser and
+4. the sending a response accordingly.
+
+• GET API : It constains functionality to 
+1. handle errors and 
+2. fetching all tasks from the storage and 
+3. storing it in a varible,
+
+• DELETE API : It contains functionalities to 
+1. handle errors (if any),
+2. Deleting a marked task from the mySQL storage
+3. sending a success response if the task gets deleted
+
+----------------------------------------------------------------------------------------------------
+♦♦ mySQL Database
+
+• The database has been created using mySQL command line- clint and 
+• It has been connected to the node server using "mySQL2" library
+
+♦ schema: 
+create table toDoList ( task_id varchar(20), task varchar(250) );
+• feilds: task_id and task
+
+
+-------------------------------------------------------------------------------------------------------
+♦ Important findings/observations
+
+• "mySQL" library in Node doesn't support the new default authentication method of MySQL 8 and 
+   mysql2 package is working fine and supporting Authentication-switch properly. Hence i have used 
+   "mySQL2" library instead of "mySQL" in this project.
+
